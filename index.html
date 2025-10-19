@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="webkit" name="renderer">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Minecraft 服务端插件报告 | OreUI</title>
+    
+    <!-- 引入 OreUI 样式 -->
+    <link href="OreUI/stylesheet/loading_mask.css" rel="stylesheet">
+    <link href="OreUI/stylesheet/public_style.css" rel="stylesheet">
+    <link href="OreUI/stylesheet/oreui.css" rel="stylesheet">
+    
+    <style>
+        .header_logo {
+            justify-content: left;
+        }
+
+        .header_title {
+            margin-left: 30px;
+        }
+
+        .main_title_area {
+            margin: 10px 20px;
+        }
+
+        .header_img {
+            margin-top: 20px;
+            max-width: 560px;
+            width: 90%;
+        }
+
+        .main_title_span_main {
+            font-family: "Minecraft Ten", sans-serif;
+            font-size: 28px;
+            margin: 10px 0;
+        }
+
+        .main_title_span_sub {
+            font-size: 24px;
+            margin: 4px 0;
+        }
+
+        .plugin_card {
+            background-color: #3A3B3C;
+            border: 2px solid #58585A;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
+        }
+
+        .plugin_header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .plugin_icon {
+            width: 48px;
+            height: 48px;
+            background-color: #6CC349;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-family: "Minecraft Ten", sans-serif;
+            font-size: 20px;
+            color: white;
+        }
+
+        .plugin_info {
+            flex: 1;
+        }
+
+        .plugin_name {
+            font-family: "Minecraft Ten", sans-serif;
+            font-size: 24px;
+            color: #FFFFFF;
+            margin: 0;
+        }
+
+        .plugin_filename {
+            font-family: "NotoSans Bold", sans-serif;
+            font-size: 14px;
+            color: #B1B2B5;
+            margin: 5px 0 0 0;
+        }
+
+        .plugin_description {
+            font-family: "NotoSans Bold", sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #D0D1D4;
+            margin-bottom: 15px;
+        }
+
+        .plugin_features {
+            background-color: #2A2B2C;
+            border-left: 4px solid #6CC349;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .feature_title {
+            font-family: "Minecraft Seven", sans-serif;
+            font-size: 18px;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+
+        .feature_list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature_item {
+            font-family: "NotoSans Bold", sans-serif;
+            font-size: 14px;
+            color: #D0D1D4;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature_item:before {
+            content: "•";
+            color: #6CC349;
+            position: absolute;
+            left: 0;
+        }
+
+        .plugin_usage {
+            background-color: #2A2B2C;
+            border-left: 4px solid #8CB3FF;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .usage_title {
+            font-family: "Minecraft Seven", sans-serif;
+            font-size: 18px;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+
+        .category_badge {
+            display: inline-block;
+            background-color: #6CC349;
+            color: #000000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: "NotoSans Bold", sans-serif;
+            font-size: 12px;
+            margin: 5px 5px 5px 0;
+        }
+
+        .footer_info {
+            align-items: center;
+            color: #FFFFFF;
+            display: flex;
+            font-family: "Minecraft Seven", sans-serif;
+            font-size: 20px;
+            height: 60px;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<div class="loading_mask" id="loading_mask">
+    <div>
+        <div class="spinner"><img alt="" id="spinner_img" src="OreUI/images/Loading_white.gif"/></div>
+        <div class="spinner">
+            <div class="spinner"><span class="spinner_text">生成世界中</span></div>
+        </div>
+        <noscript>
+            <style>
+                #spinner_img, .spinner_text {
+                    display: none;
+                }
+            </style>
+            <div class="spinner"><img alt="" id="spinner_img_error" src="OreUI/images/ErrorMessage.png"/></div>
+            <div class="spinner">
+                <div class="spinner"><span class="spinner_text_error">页面无法加载: 当前环境不支持或已禁用脚本.<br>请更换支持脚本的环境或在设置中允许脚本后访问本站.</span></div>
+            </div>
+        </noscript>
+    </div>
+</div>
+
+<body>
+<dispaly-area>
+    <header>
+        <div class="header_item header_item_left header_item_blank"></div>
+        <div class="header_logo">
+            <div class="header_title">Minecraft 插件报告</div>
+        </div>
+        <div class="header_item header_item_right" onclick="playSoundType(this);openLink('https://github.com/Spectrollay/OreUI');">
+            <img alt="" class="header_right_icon" src="OreUI/images/Github.png"/>
+        </div>
+    </header>
+    <display-body>
+        <scroll-view class="main_scroll_view">
+            <scroll-container class="primary_scroll_container">
+                <main class="scroll_container" id="main">
+                    <div class="main_title">
+                        <div class="main_title_area">
+                            <img alt="Minecraft ArtWork" class="header_img" src="OreUI/images/Default.png"/>
+                            <div class="main_title_span_main">Minecraft 服务端插件详细报告</div>
+                            <div class="main_title_span_sub">基于 OreUI 设计的插件分析文档</div>
+                        </div>
+                    </div>
+
+                    <!-- 插件报告内容 -->
+                    <div class="main main_block">
+                        <div class="main_block_content">
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">AB</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">AdvancedBan</h2>
+                                        <p class="plugin_filename">Advancedban.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    AdvancedBan 是一个功能强大的封禁管理系统，提供完整的玩家封禁、禁言和警告功能。支持MySQL数据库存储，具有Web界面和详细的日志记录。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">支持临时和永久封禁/禁言</li>
+                                        <li class="feature_item">详细的封禁历史和日志记录</li>
+                                        <li class="feature_item">Web管理界面支持</li>
+                                        <li class="feature_item">多服务器同步支持</li>
+                                        <li class="feature_item">自定义封禁消息和理由</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">管理工具</span>
+                                    <span class="category_badge">安全防护</span>
+                                    <span class="category_badge">多服务器</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">AD</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">AltDetector</h2>
+                                        <p class="plugin_filename">AltDetector-2.04.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    AltDetector 专门用于检测和防止玩家使用小号（Alt账户）进行违规行为。通过IP地址、行为模式等多维度分析识别可疑账户。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">IP地址关联检测</li>
+                                        <li class="feature_item">行为模式分析</li>
+                                        <li class="feature_item">自动封禁可疑账户</li>
+                                        <li class="feature_item">详细的检测报告</li>
+                                        <li class="feature_item">可配置的敏感度设置</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">安全防护</span>
+                                    <span class="category_badge">反作弊</span>
+                                    <span class="category_badge">账户管理</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">AN</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">AuthNAnvilSuper</h2>
+                                        <p class="plugin_filename">AuthNAnvilSuper-1.5.1.13_obf.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    高级身份验证插件，提供强大的登录保护和账户安全功能。支持多种验证方式，包括密码、二次验证等，防止账户被盗用。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">多种身份验证方式</li>
+                                        <li class="feature_item">IP地址白名单</li>
+                                        <li class="feature_item">会话管理</li>
+                                        <li class="feature_item">防暴力破解保护</li>
+                                        <li class="feature_item">详细的登录日志</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">安全防护</span>
+                                    <span class="category_badge">身份验证</span>
+                                    <span class="category_badge">账户安全</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">EC</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">Emotecraft</h2>
+                                        <p class="plugin_filename">emotecraft-paper-for-MC1.21.5-2.6.1.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    Emotecraft 为Minecraft添加了丰富的表情和动作系统，让玩家可以表达更多情感和互动。支持自定义表情和动画。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">丰富的预设表情库</li>
+                                        <li class="feature_item">自定义表情支持</li>
+                                        <li class="feature_item">流畅的动画效果</li>
+                                        <li class="feature_item">权限管理</li>
+                                        <li class="feature_item">客户端同步支持</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">社交互动</span>
+                                    <span class="category_badge">角色扮演</span>
+                                    <span class="category_badge">娱乐功能</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">GS</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">Geyser-Spigot</h2>
+                                        <p class="plugin_filename">Geyser-Spigot.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    Geyser 是一个桥梁插件，允许基岩版玩家加入Java版服务器。实现跨平台游戏体验，支持最新版本特性。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">Java版与基岩版互通</li>
+                                        <li class="feature_item">完整的特性支持</li>
+                                        <li class="feature_item">皮肤和材质同步</li>
+                                        <li class="feature_item">多版本兼容</li>
+                                        <li class="feature_item">高性能转换</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">跨平台</span>
+                                    <span class="category_badge">网络功能</span>
+                                    <span class="category_badge">兼容性</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">GC</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">GeyserConnect</h2>
+                                        <p class="plugin_filename">GeyserConnect.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    GeyserConnect 扩展了Geyser的功能，提供更好的连接管理和服务器发现功能，简化基岩版玩家的连接过程。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">自动服务器发现</li>
+                                        <li class="feature_item">连接状态监控</li>
+                                        <li class="feature_item">玩家引导功能</li>
+                                        <li class="feature_item">故障诊断工具</li>
+                                        <li class="feature_item">性能优化</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">网络优化</span>
+                                    <span class="category_badge">用户体验</span>
+                                    <span class="category_badge">连接管理</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">GS</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">GSit</h2>
+                                        <p class="plugin_filename">GSit-2.1.0.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    GSit 允许玩家坐在各种方块上，包括楼梯、地毯、床等，增加游戏的沉浸感和互动性。支持自定义坐姿和动画。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">多种坐姿支持</li>
+                                        <li class="feature_item">自定义坐点设置</li>
+                                        <li class="feature_item">流畅的动画效果</li>
+                                        <li class="feature_item">权限控制</li>
+                                        <li class="feature_item">兼容其他插件</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">沉浸体验</span>
+                                    <span class="category_badge">社交互动</span>
+                                    <span class="category_badge">角色扮演</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">MT</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">Maintenance</h2>
+                                        <p class="plugin_filename">Maintenance-4.3.0.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    维护模式插件，允许服务器在维护期间显示自定义消息并限制玩家进入。支持定时维护和紧急维护模式。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">自定义维护消息</li>
+                                        <li class="feature_item">白名单支持</li>
+                                        <li class="feature_item">定时维护计划</li>
+                                        <li class="feature_item">多语言支持</li>
+                                        <li class="feature_item">详细的维护日志</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">服务器管理</span>
+                                    <span class="category_badge">维护工具</span>
+                                    <span class="category_badge">运维支持</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">OW</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">OriginXWhitelist</h2>
+                                        <p class="plugin_filename">OriginXWhitelist-1.0.0.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    高级白名单管理系统，提供灵活的玩家准入控制。支持多种验证方式和自动审批流程。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">多种白名单验证方式</li>
+                                        <li class="feature_item">自动审批系统</li>
+                                        <li class="feature_item">详细的申请记录</li>
+                                        <li class="feature_item">批量管理功能</li>
+                                        <li class="feature_item">Web管理界面</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">准入控制</span>
+                                    <span class="category_badge">安全管理</span>
+                                    <span class="category_badge">社区管理</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">PM</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">PluginManager</h2>
+                                        <p class="plugin_filename">PluginManager-r25.10.18-build5.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    插件管理器，提供图形化界面管理服务器插件。支持插件安装、更新、配置和卸载，简化服务器管理流程。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">图形化插件管理界面</li>
+                                        <li class="feature_item">一键安装和更新</li>
+                                        <li class="feature_item">配置文件编辑</li>
+                                        <li class="feature_item">依赖关系管理</li>
+                                        <li class="feature_item">备份和恢复功能</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">服务器管理</span>
+                                    <span class="category_badge">运维工具</span>
+                                    <span class="category_badge">插件管理</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">SR</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">SkinsRestorer</h2>
+                                        <p class="plugin_filename">SkinsRestorer.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    皮肤恢复器，解决离线模式服务器皮肤显示问题。自动从Mojang服务器获取正版皮肤，支持自定义皮肤设置。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">自动皮肤恢复</li>
+                                        <li class="feature_item">自定义皮肤支持</li>
+                                        <li class="feature_item">皮肤库管理</li>
+                                        <li class="feature_item">多版本兼容</li>
+                                        <li class="feature_item">缓存优化</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">视觉效果</span>
+                                    <span class="category_badge">兼容性</span>
+                                    <span class="category_badge">个性化</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">SN</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">Sonar-Bukkit</h2>
+                                        <p class="plugin_filename">Sonar-Bukkit.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    反作弊和监控系统，检测和防止各种作弊行为。使用先进的检测算法保护服务器公平性。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">多种作弊行为检测</li>
+                                        <li class="feature_item">实时监控和警报</li>
+                                        <li class="feature_item">详细的检测报告</li>
+                                        <li class="feature_item">可配置的检测规则</li>
+                                        <li class="feature_item">自动封禁系统</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">反作弊</span>
+                                    <span class="category_badge">安全监控</span>
+                                    <span class="category_badge">公平竞技</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">SM</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">SuperMotd</h2>
+                                        <p class="plugin_filename">SuperMotd.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    服务器列表MOTD定制工具，允许自定义服务器在列表中的显示信息。支持变量替换和条件显示。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">自定义MOTD消息</li>
+                                        <li class="feature_item">玩家数量显示定制</li>
+                                        <li class="feature_item">版本信息伪装</li>
+                                        <li class="feature_item">条件显示规则</li>
+                                        <li class="feature_item">多行MOTD支持</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">服务器展示</span>
+                                    <span class="category_badge">品牌定制</span>
+                                    <span class="category_badge">用户体验</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">VB</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">ViaBackwards</h2>
+                                        <p class="plugin_filename">ViaBackwards-5.4.3-SNAPSHOT.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    版本兼容插件，允许旧版本客户端连接新版本服务器。实现向后兼容，支持多版本玩家共存。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">多版本客户端支持</li>
+                                        <li class="feature_item">协议转换</li>
+                                        <li class="feature_item">特性兼容处理</li>
+                                        <li class="feature_item">性能优化</li>
+                                        <li class="feature_item">错误修复</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">版本兼容</span>
+                                    <span class="category_badge">网络功能</span>
+                                    <span class="category_badge">多版本支持</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">VV</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">ViaVersion</h2>
+                                        <p class="plugin_filename">ViaVersion-5.5.2-SNAPSHOT.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    主要版本兼容插件，允许新版本客户端连接旧版本服务器。支持最新版本特性在旧版本服务器上的使用。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">新版本客户端支持</li>
+                                        <li class="feature_item">协议升级</li>
+                                        <li class="feature_item">特性模拟</li>
+                                        <li class="feature_item">错误兼容处理</li>
+                                        <li class="feature_item">性能监控</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">版本兼容</span>
+                                    <span class="category_badge">网络功能</span>
+                                    <span class="category_badge">前沿支持</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">VC</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">VoiceChat</h2>
+                                        <p class="plugin_filename">voicechat-bukkit-2.6.4.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    语音聊天系统，为Minecraft服务器添加实时语音通信功能。支持空间音频和权限管理。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">实时语音通信</li>
+                                        <li class="feature_item">空间音频效果</li>
+                                        <li class="feature_item">频道管理</li>
+                                        <li class="feature_item">语音权限控制</li>
+                                        <li class="feature_item">质量调节</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">社交互动</span>
+                                    <span class="category_badge">语音通信</span>
+                                    <span class="category_badge">团队协作</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">WC</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">Welcome</h2>
+                                        <p class="plugin_filename">welcome-1.2.0-SNAPSHOT.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    欢迎系统，为新玩家提供友好的入门体验。支持自定义欢迎消息、礼物和引导功能。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">自定义欢迎消息</li>
+                                        <li class="feature_item">新手礼物系统</li>
+                                        <li class="feature_item">引导教程</li>
+                                        <li class="feature_item">多语言支持</li>
+                                        <li class="feature_item">条件触发</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">用户体验</span>
+                                    <span class="category_badge">新手引导</span>
+                                    <span class="category_badge">社区建设</span>
+                                </div>
+                            </div>
+
+                            <div class="plugin_card">
+                                <div class="plugin_header">
+                                    <div class="plugin_icon">WE</div>
+                                    <div class="plugin_info">
+                                        <h2 class="plugin_name">WorldEdit</h2>
+                                        <p class="plugin_filename">worldedit-bukkit-7.3.12-beta-02.jar</p>
+                                    </div>
+                                </div>
+                                <div class="plugin_description">
+                                    世界编辑工具，提供强大的地形编辑和建筑功能。支持批量操作、脚本执行和复杂地形生成。
+                                </div>
+                                <div class="plugin_features">
+                                    <h3 class="feature_title">主要功能</h3>
+                                    <ul class="feature_list">
+                                        <li class="feature_item">强大的选区编辑</li>
+                                        <li class="feature_item">批量方块操作</li>
+                                        <li class="feature_item">地形生成工具</li>
+                                        <li class="feature_item">脚本支持</li>
+                                        <li class="feature_item">撤销/重做功能</li>
+                                    </ul>
+                                </div>
+                                <div class="plugin_usage">
+                                    <h3 class="usage_title">使用场景</h3>
+                                    <span class="category_badge">建筑工具</span>
+                                    <span class="category_badge">地形编辑</span>
+                                    <span class="category_badge">创作支持</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="footer_info">
+                        <div>Minecraft 插件报告 | 基于 OreUI 设计 | © 2025</div>
+                    </div>
+                </main>
+            </scroll-container>
+            <custom-scrollbar class="primary_custom_scrollbar">
+                <custom-scrollbar-track></custom-scrollbar-track>
+                <custom-scrollbar-thumb></custom-scrollbar-thumb>
+            </custom-scrollbar>
+        </scroll-view>
+    </display-body>
+</dispaly-area>
+</body>
+
+<!-- 引入 OreUI 脚本 -->
+<script src="OreUI/javascript/loading.js"></script>
+<script src="OreUI/library/accessibility.js"></script>
+<script src="OreUI/javascript/public_script.js"></script>
+<script src="OreUI/javascript/oreui.js"></script>
+
+</html>
